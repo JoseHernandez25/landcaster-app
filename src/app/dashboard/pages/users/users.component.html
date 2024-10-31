@@ -1,0 +1,292 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-75">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Usuarios</h3>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                            <i class="bi bi-search" style="font-size: .7rem;"></i>
+                        </span>
+                        <input #inputTerm type="text" class="form-control form-control-sm rounded-0"
+                            placeholder="Nombre" (input)="search($event)">
+                    </div>
+                    <div class="text-end w-75">
+                        @if (selectedUser) {
+                        Usuario seleccinoado: <span class="fw-bold"> {{selectedUser!.userName}}</span>
+                        } @else {
+                        Sin seleccionar Usuario
+                        }
+                    </div>
+                </div>
+                <table class="table table-striped table-hover table-sm border-0" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th class="border-0 position-relative " (click)="orderBy('id')">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'id', 'bi bi-caret-up': !(orderByAsc && orderByField === 'id')}"
+                                    class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'id'), 'bi bi-caret-down': orderByAsc && orderByField === 'id'}"
+                                    class="position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+                                <span style="margin-left: 15px;">Id</span>
+                            </th>
+                            <th class="border-0 position-relative " (click)="orderBy('name')">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'name', 'bi bi-caret-up': !(orderByAsc && orderByField === 'name')}"
+                                    class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'name'), 'bi bi-caret-down': orderByAsc && orderByField === 'name'}"
+                                    class="position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+
+                                <span style="margin-left: 15px;">Nombre</span>
+                            </th>
+                            <th class="border-0  position-relative text-start">
+                                <span>Correo Electronico</span>
+                            </th>
+                            <th class="border-0  position-relative text-start">
+                                <span>Rol</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (user of (paginationService.pagination$ | async)?.data; track $index) {
+                        <tr class="border-0" (dblclick)="handleDoubleClick(user)" (click)="selectUser(user)"
+                            [ngClass]="{'table-primary': selectedUser?.id  == user.id}">
+
+                            <td class=" border-0">{{user.id}}</td>
+                            <td class=" border-0">{{user.userName}}</td>
+                            <td class="border-0">{{user.email}}</td>
+                            <td class="border-0">{{user.role?.normalizedName}}</td>
+                        </tr>
+                        }
+                        <tr>
+                            <td colspan="8" class="border-0 text-center">
+                                @if ((paginationService.pagination$ | async)?.data?.length == 0) {
+                                <h5> Lo sentimos no se encontraron Usuarios.</h5>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-8">
+                        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button"
+                            (click)="openStoreModal()">
+                            Agregar
+                        </button>
+                        <button [disabled]="!selectedUser" class="btn btn-danger text-light rounded-0 btn-sm mx-1"
+                            type="button" (click)="delete()">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditUsers" (ngSubmit)="update()">
+        <div class="modal-header">
+            <h5 class="modal-title">{{selectedUser?.userName}}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input formControlName="userName" class="form-control form-control-sm rounded-0">
+                    <small id="from_name_help" *ngIf="validatorService.validateInput(formEditUsers, 'userName')"
+                        class="text-danger">Requerido</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="" class="form-label">Usuario</label>
+                    <input formControlName="normalizedUserName" class="form-control form-control-sm rounded-0">
+                    <small *ngIf="validatorService.validateInput(formEditUsers, 'normalizedUserName')" id=""
+                        class="form-text text-danger">Requerido</small>
+                        
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input formControlName="email" class="form-control form-control-sm rounded-0">
+                    <small *ngIf="validatorService.validateInput(formEditUsers, 'email')" id=""
+                        class="form-text text-danger">Requerido</small>
+                </div>
+               
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="" class="form-label">Telefono</label>
+                    <input type="text" formControlName="phoneNumber" class="form-control form-control-sm rounded-0">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" formControlName="passwordHash" class="form-control form-control-sm rounded-0" placeholder="Ingrese su contraseña">
+                    <small *ngIf="validatorService.validateInput(formEditUsers, 'passwordHash')" id=""
+                        class="form-text text-danger">Requerido</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="" class="form-label">Rol</label>
+                <select class="form-select form-select-sm rounded-0" formControlName="roleId" id="">
+                    <option selected disabled value="">Selecciona un rol</option>
+                    @for (role of roles; track $index) {
+                    <option value="{{role.id}}">{{role.normalizedName}}</option>
+                    }
+                </select>
+                <small id="from_name_help"
+                    *ngIf="validatorService.validateInput(formEditUsers, 'roleId')"
+                    class="text-danger">
+                    Requerido
+                </small>
+            </div>
+        </div>
+    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalStore let-close="close" class="rounded-0">
+    <form [formGroup]="formStoreUsers" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Crear nuevo usuario</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="" class="form-label">Rol</label>
+                    <select formControlName="roleId" class="form-select form-select-sm rounded-0" name="" id="">
+                        <option selected disabled value="">Selecciona un rol</option>
+                        @for (role of roles; track $index) {
+                        <option value="{{role.id}}">{{role.normalizedName}}</option>
+                        }
+                    </select>
+                    <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreUsers, 'roleId')"
+                        class="text-danger">
+                        Requerido
+                    </small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input formControlName="userName" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreUsers, 'userName')"
+                            class="text-danger">Requerido</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Usuario</label>
+                        <input formControlName="normalizedUserName" class="form-control form-control-sm rounded-0">
+                        <small *ngIf="validatorService.validateInput(formStoreUsers, 'normalizedUserName')" id=""
+                            class="form-text text-danger">Requerido</small>
+                            
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input formControlName="email" class="form-control form-control-sm rounded-0">
+                        <small *ngIf="validatorService.validateInput(formStoreUsers, 'email')" id=""
+                            class="form-text text-danger">Requerido</small>
+                    </div>
+                   
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Telefono</label>
+                        <input type="text" formControlName="phoneNumber" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" formControlName="passwordHash" class="form-control form-control-sm rounded-0" placeholder="Ingrese su contraseña">
+                        <small *ngIf="validatorService.validateInput(formStoreUsers, 'passwordHash')" id=""
+                            class="form-text text-danger">Requerido</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div *ngIf="controlsRoleDistributor" class="row">
+                <div class="col-md-6 d-inline-block">
+                    <div class="mb-3">
+                        <label for="" class="form-label">RFC</label>
+                        <input type="text" formControlName="RFC" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 d-inline-block">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Direccion</label>
+                        <input type="text" formControlName="address" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="controlsRoleEmployee" class="row">
+                <div class="col-md-6 d-inline-block">
+                    <div class="mb-3">
+                        <label for="" class="form-label">CURP</label>
+                        <input type="text" formControlName="CURP" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 d-inline-block">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Direccion</label>
+                        <input type="text" formControlName="Direccion" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 d-inline-block">
+                    <div class="mb-3">
+                        <label for="" class="form-label">RFC</label>
+                        <input type="text" formControlName="Telefono" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 d-inline-block">
+                    <div class="mb-3">
+                        <label for="" class="form-label">NSS</label>
+                        <input type="email" formControlName="Email" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+
+</ng-template>

@@ -1,0 +1,137 @@
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="profile"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('profile')}">
+                <i class="bi bi-person"></i>
+
+                <span>Mi perfil</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="users"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('users')}">
+                <i class="bi bi-people"></i>
+                <span>Usuarios</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="colors"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('colors')}">
+                <i class="bi bi-brush-fill"></i>
+                <span>Colores</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#toggle-doors" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-door-closed-fill"></i><span>Puertas</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="toggle-doors" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                    <a class="nav-link collapsed" routerLink="models"
+                        routerLinkActive="border-4 border-start border-primary rounded-0"
+                        [ngClass]="{'collapsed':!isActive('models')}">
+                        <i class="bi bi-people"></i>
+                        <span>Modelos</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link collapsed" routerLink="lines"
+                        routerLinkActive="border-4 border-start border-primary rounded-0"
+                        [ngClass]="{'collapsed':!isActive('lines')}">
+                        <i class="bi bi-list" style="font-size: 1rem;"></i><span>Lineas</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" routerLink="joinery" routerLinkActive="border-4 border-start border-primary rounded-0"
+                        [ngClass]="{'collapsed':!isActive('models')}">
+                        <i class="bi bi-wrench-adjustable" style="font-size: 1rem;"></i>
+                        <span>Armados</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="materials"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('materials')}">
+                <i class="bi bi-hammer"></i>
+                <span>Materiales</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#toggle-ironwork" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-journal-text"></i><span>Herrajes</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="toggle-ironwork" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="nav-link collapsed" routerLink="hinges" routerLinkActive="rounded-0"
+                        [ngClass]="{'collapsed':!isActive('hinges')}">
+                        <i class="bi bi-circle"></i><span>Bisagras</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link collapsed" routerLink="drawer-slides" routerLinkActive="rounded-0"
+                        [ngClass]="{'collapsed':!isActive('drawer-slides')}">
+                        <i class="bi bi-circle"></i><span>Correderas</span>
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="areas"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('areas')}">
+                <i class="bi bi-bounding-box"></i>
+                <span>Areas</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="routes"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('routes')}">
+                <i class="bi bi-arrow-repeat"></i>
+                <span>Rutas</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="external-accesories"
+                routerLinkActive="border-4 border-start border-primary rounded-0"
+                [ngClass]="{'collapsed':!isActive('external-accesories')}">
+                <i class="bi bi-house-check"></i>
+                <span>Equipos</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#toggle-inventory" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-archive"></i><span>inventario</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="toggle-inventory" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="nav-link collapsed" routerLink="categories" routerLinkActive="rounded-0"
+                        [ngClass]="{'collapsed':!isActive('categories')}">
+                        <i class="bi bi-circle"></i><span>Categorias</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link collapsed" routerLink="inventories" routerLinkActive="rounded-0"
+                    [ngClass]="{'collapsed':!isActive('inventories')}">
+                    <i class="bi bi-circle"></i>
+                    <span>Existencias</span>
+                </a>
+                </li>
+    
+            </ul>
+        </li>
+    </ul>
+
+    
+</aside>

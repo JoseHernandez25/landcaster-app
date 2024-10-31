@@ -1,0 +1,207 @@
+<table class="table table-sm table-striped table-hover border-0" style="font-size: 0.9rem;">
+    <thead>
+        <tr>
+            <th class="border-0"></th>
+            <th class="border-0">Nombre</th>
+            <th class="border-0">Descripcion</th>
+            <th class="border-0">weightPerM2</th>
+            <th class="border-0">Clase de Material</th>
+            <th class="border-0">SubClase de Material</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (material of (paginationService.pagination$ | async)?.data; track $index) {
+        <tr class="border-0" (click)="selectMaterial(material)" (dblclick)="handleDoubleClick(material)"
+            [ngClass]="{'table-primary': selectedMaterial?.id  == material.id}">
+            <td class=" border-0">{{ $index + 1}}</td>
+            <td class=" border-0">{{material.name}}</td>
+            <td class=" border-0">{{material.description}}</td>
+            <td class=" border-0">{{material.weightPerM2}}</td>
+            <td class=" border-0">{{material.materialType.name}}</td>
+            <td class=" border-0">{{material.subTypeMaterial.name}}</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-8">
+        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+    </div>
+    <div class="col-4 text-end">
+        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button" (click)="openStoreModal()">
+            Agregar
+        </button>
+        <button [disabled]="!selectedMaterial" class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button"
+            (click)="delete()">
+            Eliminar
+        </button>
+    </div>
+</div>
+
+<ng-template #modalStoreMaterial let-close="close" class="rounded-0">
+    <form [formGroup]="formStoreMaterial" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar Material</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">SubClases</label>
+                        <select formControlName="subTypeMaterialId" class="form-select form-select-sm rounded-0" name=""
+                            id="">
+                            <option selected disabled value="">Selecciona una SubClase</option>
+                            @for (subtypematerials of subTypeMaterials; track $index) {
+                            <option value="{{subtypematerials.id}}">{{subtypematerials.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreMaterial, 'subTypeMaterialId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Clases</label>
+                        <select formControlName="materialTypeId" class="form-select form-select-sm rounded-0" name=""
+                            id="">
+                            <option selected disabled value="">Selecciona una clase</option>
+                            @for (materialType of materialTypes; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreMaterial, 'materialTypeId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreMaterial, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Descripcion</label>
+                        <input formControlName="description" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreMaterial, 'description')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">SubGrupo</label>
+                        <input formControlName="subGroupId" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreMaterial, 'subGroupId')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditMaterial" (ngSubmit)="update()">
+        <div class="modal-header">
+            <h5 class="modal-title">{{selectedMaterial?.name}}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditMaterial, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Clase</label>
+                        <select class="form-select form-select-sm rounded-0" formControlName="materialTypeId" id="">
+                            <option selected disabled value="">Selecciona una clase</option>
+                            @for (materialType of materialTypes; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">SubClase</label>
+                        <select class="form-select form-select-sm rounded-0" formControlName="subTypeMaterialId" id="">
+                            <option selected disabled value="">Selecciona una clase</option>
+                            @for (subtypematerial of subTypeMaterials; track $index) {
+                            <option value="{{subtypematerial.id}}">{{subtypematerial.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditMaterial, 'subTypeMaterialId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Descripcion</label>
+                        <input formControlName="description" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">weightPerM2</label>
+                        <input formControlName="weightPerM2" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">SubGrupo</label>
+                        <input formControlName="subGroupId" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>

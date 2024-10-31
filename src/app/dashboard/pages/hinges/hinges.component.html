@@ -1,0 +1,85 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-100">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Bisagras</h3>
+                    </div>
+
+                    <div class="input-group w-50 mx-2">
+                        <select #selectHingeType class="form-select form-select-sm rounded-0" name="" id=""*ngIf="isHingesTabSelected"
+                        (change)="filterByHingeType($event)">
+                            <option selected value="">Selecciona un tipo</option>
+                            @for (HingeType of hingeType; track $index) {
+                            <option value="{{HingeType.id}}">{{HingeType.name}}</option> -->
+                             }
+                        </select>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <select #selectBrandId class="form-select form-select-sm rounded-0" name="" id="" *ngIf="isHingesTabSelected"
+                            (change)="filterByBrand($event)">
+                            <option selected value="">Todas las marcas</option>
+                            @for (brand of brands; track $index) {
+                            <option value="{{brand.id}}">{{brand.name}}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="input-group w-50 mx-2"  *ngIf="isHingesTabSelected">
+                   
+            </div>
+            <div class="input-group input-group-sm w-75">
+                <span class="input-group-text rounded-0" id="basic-addon1">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" class="form-control rounded-0" placeholder="Nombre" (input)="search($event)">
+              </div>
+              
+                   
+                    <div id="hinge || components" class="text-end w-100">
+                        <div id="hinge" style="float: right;">
+                            <span class="fw-bold" *ngIf="hingeName">{{ hingeName }}</span>
+                            <span *ngIf="!hingeName">Sin seleccionar </span>
+                        </div>
+                        <div id="hingeComponent" style="float: right;">
+                            <span class="fw-bold" *ngIf="hingeComponentName">{{ hingeComponentName }}</span>
+                            <span *ngIf="!hingeComponentName"></span>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs rounded-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button (click)="showHinges()" class="nav-link active" id="hinges-tab" data-bs-toggle="tab"
+                            data-bs-target="#hinges" type="button" role="tab" aria-controls="hinges"
+                            aria-selected="true">
+                            Bisagras
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="showHingesComponents()" class="nav-link" id="components-tab"
+                            data-bs-toggle="tab" data-bs-target="#components" type="button" role="tab"
+                            aria-controls="components" aria-selected="false">
+                            Componentes
+                        </button>
+                    </li>
+                </ul>
+               
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="hinges" role="tabpanel" aria-labelledby="hinges-tab">
+                        @if (!stm) {
+                        <app-hinges-section #hingesSection (hingeName)="selectHinge($event)"></app-hinges-section>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="components" role="tabpanel" aria-labelledby="components-tab">
+                        @if (stm) {
+                        <app-hinges-component-section #hingesComponentSection
+                            (hingeComponentName)="selectHingeComponents($event)"></app-hinges-component-section>
+                        }
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>

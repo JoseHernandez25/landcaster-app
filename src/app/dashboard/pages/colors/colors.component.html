@@ -1,0 +1,419 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-75">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Colores</h3>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                            <i class="bi bi-search" style="font-size: .7rem;"></i>
+                        </span>
+                        <input #inputTerm type="text" class="form-control form-control-sm rounded-0"
+                            placeholder="Nombre" (input)="search($event)">
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <select #selectBrandId class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByMaterialType($event)">
+                            <option selected value="">Todas las clases</option>
+                            @for (materialType of materialTypes; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <select #selectmaterialTypeId class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByBrand($event)">
+                            <option selected value="">Todas las marcas</option>
+                            @for (brand of brands; track $index) {
+                            <option value="{{brand.id}}">{{brand.name}}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <select #selectmaterialTypeId class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterWithTrashed($event)">
+                            <option selected value="false">Activos</option>
+                            <option value="null">Activos e inactivos</option>
+                            <option value="true">Inactivos</option>
+
+                        </select>
+                    </div>
+                    <div class="text-end w-75">
+                        @if (selectedColor) {
+                        Color seleccinoado: <span class="fw-bold"> {{selectedColor!.name}}</span>
+                        } @else {
+                        Sin selecinoar color
+                        }
+                    </div>
+
+                </div>
+                <table class="table table-striped table-hover table-sm border-0" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th class="border-0 position-relative" (click)="orderBy('id')" style="padding-left: 10px;">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'id', 'bi bi-caret-up': !(orderByAsc && orderByField === 'id')}"
+                                    class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'id'), 'bi bi-caret-down': orderByAsc && orderByField === 'id'}"
+                                    class="position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+
+                                <span style="margin-left: 20px;">Id</span>
+                            </th>
+                            <th class="border-0 position-relative" (click)="orderBy('code')"
+                                style="padding-left: 10px;">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'code', 'bi bi-caret-up': !(orderByAsc && orderByField === 'code')}"
+                                    class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'code'), 'bi bi-caret-down': orderByAsc && orderByField === 'code'}"
+                                    class="position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+
+                                <span style="margin-left: 20px;">Code</span>
+                            </th>
+                            <th class="border-0  position-relative" (click)="orderBy('name')"
+                                style="padding-left: 10px;">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField == 'name','bi bi-caret-up': !(orderByAsc && orderByField == 'name')}"
+                                    class=" position-absolute top-0 start-0 " style="font-size: 0.9rem;"></i>
+
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField == 'name'),'bi bi-caret-down': (orderByAsc && orderByField == 'name')}"
+                                    class=" position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+                                <span style="margin-left: 20px;">Name</span>
+
+                            </th>
+                            <th class="border-0  position-relative" (click)="orderBy('brand')"
+                                style="padding-left: 10px;">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField == 'brand','bi bi-caret-up': !(orderByAsc && orderByField == 'brand')}"
+                                    class=" position-absolute top-0 start-0 " style="font-size: 0.9rem;"></i>
+
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField == 'brand'),'bi bi-caret-down': (orderByAsc && orderByField == 'brand')}"
+                                    class=" position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+                                <span style="margin-left: 20px;">Marca</span>
+
+                            </th>
+                            <th class="border-0  position-relative" (click)="orderBy('materialType')"
+                                style="padding-left: 10px;">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField == 'materialType','bi bi-caret-up': !(orderByAsc && orderByField == 'materialType')}"
+                                    class=" position-absolute top-0 start-0 " style="font-size: 0.9rem;"></i>
+
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField == 'materialType'),'bi bi-caret-down': (orderByAsc && orderByField == 'materialType')}"
+                                    class=" position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+                                <span style="margin-left: 20px;">Clases</span>
+
+                            </th>
+                            <th class="border-0  position-relative" (click)="orderBy('supplierCode')"
+                                style="padding-left: 10px;">
+                                <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField == 'supplierCode','bi bi-caret-up': !(orderByAsc && orderByField == 'supplierCode')}"
+                                    class=" position-absolute top-0 start-0 " style="font-size: 0.9rem;"></i>
+
+                                <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField == 'supplierCode'),'bi bi-caret-down': (orderByAsc && orderByField == 'supplierCode')}"
+                                    class=" position-absolute top-50 start-0"
+                                    style="font-size: 0.8rem; margin-top: -5px;"></i>
+                                <span style="margin-left: 20px;">Codigo del prov.</span>
+                            </th>
+                            <th class="border-0 text">
+                                <span>puertas</span>
+                            </th>
+                            <th class="border-0">
+                                <span>cascarones</span>
+                            </th>
+                            <th class="border-0"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (color of (paginationService.pagination$ | async)?.data; track $index) {
+                        <tr class="border-0" (dblclick)="handleDoubleClick(color)" (click)="selectColor(color)"
+                            [ngClass]="{'table-primary': selectedColor?.id  == color.id}">
+                            <td class=" border-0">{{color.id}}</td>
+                            <td class=" border-0">{{color.code}}</td>
+                            <td class=" border-0">{{color.name}}</td>
+                            <td class=" border-0">{{color.brand.name}}</td>
+                            <td class=" border-0">{{color.materialType.name}}</td>
+                            <td class=" border-0">{{color.supplierCode}}</td>
+                            <td class=" border-0">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                        (change)="checkColor(color, 'forDoors')" [checked]="color.forDoors" id="" />
+                                </div>
+                            </td>
+                            <td class=" border-0">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                        (change)="checkColor(color, 'forStructure')" [checked]="color.forStructure"
+                                        id="" />
+                                </div>
+                            </td>
+                            }
+                        <tr>
+                            <td colspan="8" class="border-0 text-center">
+                                @if ((paginationService.pagination$ | async)?.data?.length == 0) {
+                                <h5> Lo sentimos no se encontraron colores.</h5>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-8">
+                        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button"
+                            (click)="clearFilter()">
+                            Limpiar filtro
+                        </button>
+                        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button"
+                            (click)="openStoreModal()">
+                            Agregar
+                        </button>
+                        <button [disabled]="!selectedColor" class="btn btn-danger text-light rounded-0 btn-sm mx-1"
+                            type="button" (click)="delete()">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                    Subtipos de materiales
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <div class="mb-2.9 d-flex align-items-center justify-content-between align-items-start">
+                        <input type="text" class="form-control rounded-0" name="" id="" aria-describedby="helpId"
+                            placeholder="Agregar subtipo de material" />
+                        <button class="btn btn-outline-primary btm-sm rounded-0 border-0">
+                            <i class="bi bi-plus-circle-fill" style="font-size: 1.2rem;"></i>
+                        </button>
+                    </div>
+                    @if (subTypeMaterials) {
+                    <span>No se encontraron Suptipos de materiales</span>
+                    }
+                    @for (subTypeMaterial of subTypeMaterials; track $index) {
+                    <div
+                        class="list-group-item d-flex align-items-center justify-content-between align-items-start rounded-0">
+                        <span>{{subTypeMaterial.name}}</span>
+                        <button class="btn btn-outline-danger btm-sm rounded-0 border-0">
+                            <i class="bi bi-trash-fill" style="font-size: 1rem;"></i>
+                        </button>
+                    </div>
+                    }
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalStoreColor let-close="close" class="rounded-0">
+    <form [formGroup]="formStoreColors" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar color</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Marcas</label>
+                        <select formControlName="brandId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona una marca</option>
+                            @for (brand of brands; track $index) {
+                            <option value="{{brand.id}}">{{brand.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreColors, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Clases</label>
+                        <select formControlName="materialTypeId" class="form-select form-select-sm rounded-0" name=""
+                            id="">
+                            <option selected disabled value="">Selecciona una clase</option>
+                            @for (materialType of materialTypes; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreColors, 'materialTypeId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreColors, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Codigo del proveedor</label>
+                        <input formControlName="supplierCode" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreColors, 'supplierCode')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input formControlName="forDoors" class="form-check-input" type="checkbox" value=""
+                                id="forDoors" />
+                            <label class="form-check-label" for="forDoors">Puertas </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input formControlName="forStructure" class="form-check-input" type="checkbox" value=""
+                                id="forStructure" />
+                            <label class="form-check-label" for="forStructure">Cascarones </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Gaurdar
+            </button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditColors" (ngSubmit)="update()">
+        <div class="modal-header">
+            <h5 class="modal-title">{{selectedColor?.name}}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Marcas</label>
+                        <select class="form-select form-select-sm rounded-0" formControlName="brandId" id="">
+                            <option selected disabled value="">Selecciona una marca</option>
+                            @for (brand of brands; track $index) {
+                            <option value="{{brand.id}}">{{brand.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditColors, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Clases</label>
+                        <select class="form-select form-select-sm rounded-0" formControlName="materialTypeId" id="">
+                            <option selected disabled value="">Selecciona una clase</option>
+                            @for (materialType of materialTypes; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditColors, 'materialTypeId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditColors, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Codigo del proveedor</label>
+                        <input formControlName="supplierCode" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditColors, 'supplierCode')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input formControlName="forDoors" class="form-check-input" type="checkbox" value=""
+                                id="forDoors" />
+                            <label class="form-check-label" for="forDoors">Puertas </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input formControlName="forStructure" class="form-check-input" type="checkbox" value=""
+                                id="forStructure" />
+                            <label class="form-check-label" for="forStructure">Cascarones </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>

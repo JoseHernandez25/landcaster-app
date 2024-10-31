@@ -1,0 +1,448 @@
+<table class="table table-striped table-hover table-sm border-0" style="font-size: 0.9rem;">
+
+    <thead>
+    <tr>
+        <th class="border-0 position-relative" (click)="orderBy('id')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'id', 'bi bi-caret-up': !(orderByAsc && orderByField === 'id')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'id'), 'bi bi-caret-down': orderByAsc && orderByField === 'id'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Id</span>
+        </th>
+        <th class="border-0 position-relative" (click)="orderBy('model')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'model', 'bi bi-caret-up': !(orderByAsc && orderByField === 'model')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'model'), 'bi bi-caret-down': orderByAsc && orderByField === 'model'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Modelo</span>
+        </th>
+        <th class="border-0 position-relative" (click)="orderBy('line')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'line', 'bi bi-caret-up': !(orderByAsc && orderByField === 'line')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'line'), 'bi bi-caret-down': orderByAsc && orderByField === 'line'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Linea</span>
+        </th>
+        <th class="border-0 position-relative" (click)="orderBy('route')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'route', 'bi bi-caret-up': !(orderByAsc && orderByField === 'route')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'route'), 'bi bi-caret-down': orderByAsc && orderByField === 'route'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Ruta</span>
+        </th>
+        <th class="border-0 position-relative" (click)="orderBy('joineryType')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'joineryType', 'bi bi-caret-up': !(orderByAsc && orderByField === 'joineryType')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'joineryType'), 'bi bi-caret-down': orderByAsc && orderByField === 'joineryType'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Subtipo de Armado</span>
+        </th>
+        <th class="border-0 position-relative" (click)="orderBy('joinery')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'joinery', 'bi bi-caret-up': !(orderByAsc && orderByField === 'joinery')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'joinery'), 'bi bi-caret-down': orderByAsc && orderByField === 'joinery'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Armado</span>
+        </th>
+        <th class="border-0 position-relative" (click)="orderBy('materialType')" style="padding-left: 10px;">
+            <i [ngClass]="{'bi bi-caret-up-fill': orderByAsc && orderByField === 'materialType', 'bi bi-caret-up': !(orderByAsc && orderByField === 'materialType')}"
+                class="position-absolute top-0 start-0" style="font-size: 0.9rem;"></i>
+            <i [ngClass]="{'bi bi-caret-down-fill': !(orderByAsc && orderByField === 'materialType'), 'bi bi-caret-down': orderByAsc && orderByField === 'materialType'}"
+                class="position-absolute top-50 start-0" style="font-size: 0.8rem; margin-top: -5px;"></i>
+            <span style="margin-left: 20px;">Clase Material</span>
+        </th>
+    </tr>
+</thead>
+
+
+
+    <tbody>
+        @for (doormodel of doorModels; track $index) {
+        <tr class="border-0" (dblclick)="handleDoubleClick(doormodel)"
+            [ngClass]="{'table-primary': selectedDoorModel?.id  == doormodel.id}" (click)="selectdoorModel(doormodel)">
+            <td class=" border-0">{{$index + 1}}</td>
+            <td class=" border-0">
+                {{doormodel.model.name}} 
+            </td>
+            <td class=" border-0">{{doormodel.line.name}}</td>
+            <td class=" border-0">{{doormodel.route.code}}</td>
+            <td class=" border-0">{{doormodel.joineryType.name}}</td>
+            <td class=" border-0">{{doormodel.joinery.name}}</td>
+            <td class=" border-0">{{doormodel.materialType.name}}</td>
+            <td class=" border-0">
+                <!-- Modal trigger button -->
+                <a (click)="openTypesBoxJourney(doormodel.typesBoxJournies)" type="button" class="text-primary"
+                    data-bs-toggle="modal" data-bs-target="#modalId">
+                    Ver Frente de Cajon
+                </a>
+            </td>
+
+
+
+        </tr>
+        }
+    </tbody>
+    <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+        aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">
+                        Frente de Cajon
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <div class="mb-3 d-flex align-items-center justify-content-between align-items-start">
+                            <input type="text" class="form-control rounded-0" name="" id="" aria-describedby="helpId"
+                                placeholder="Agregar SubClase" />
+                            <button class="btn btn-outline-primary btm-sm rounded-0 border-0">
+                                <i class="bi bi-plus-circle-fill" style="font-size: 1.2rem;"></i>
+                            </button>
+                            <!--cambio-->
+                        </div>
+                        @if (detaillTypesBoxJounery.length === 0) {
+                        <span>No se encontraron Armados</span>
+                        }
+                        @for (typesBoxJournies of detaillTypesBoxJounery; track $index) {
+                        <div
+                            class="list-group-item d-flex align-items-center justify-content-between align-items-start rounded-0">
+                            <span>{{typesBoxJournies.name}}</span>
+                            <button class="btn btn-outline-danger btm-sm rounded-0 border-0">
+                                <i class="bi bi-trash-fill" style="font-size: 1rem;"></i>
+                            </button>
+                        </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</table>
+
+<div class="row">
+    <div class="col-8">
+        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+    </div>
+    <div class="col-4 text-end">
+        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button" (click)="openStoreModal()">
+            Agregar
+        </button>
+        <button [disabled]="!selectedDoorModel" class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button"
+            (click)="delete()">
+            Eliminar
+        </button>
+    </div>
+</div>
+
+<ng-template #modalStoreDoorModel let-close="close" class="rounded-0">
+    <form [formGroup]="formStoreDoorModel" (ngSubmit)="store()" class="p-3">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar Modelo De Puerta</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Modelo</span>
+                        <input hidden type="text" formControlName="modelId">
+                        <input type="text" formControlName="modelName" (input)="searchModel($event)"
+                            class="form-control form-control-sm rounded-0" placeholder="Buscar"
+                            aria-describedby="helpId" [ngClass]="{'rounded-0': filteredModels().length != 0}"
+                            (keydown.arrowup)="navigateModelUp()" (keydown.arrowdown)="navigateModelDown()"
+                            (keydown.enter)="selectModelFromKeyboard()" />
+
+                        <ul *ngIf="Modelterm && showList"
+                            class="list-group list-group position-absolute rounded-0 animate__animated animate__fadeIn"
+                            style="width: 16rem; z-index: 999;">
+                            <li *ngFor="let model of filteredModels(); let i = index"
+                                class="list-group-item list-group-item-action" [class.active]="selectedModelIndex === i"
+                                (click)="selectModel(model)">{{model.name}}</li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Clase Material</span>
+                        <select formControlName="materialTypeId" class="form-select form-select-sm rounded-0" name=""
+                            id="">
+                            <option selected disabled value="">Selecciona la Clase Material</option>
+                            @for (materialType of materialType; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Armados</span>
+                        <select formControlName="joineryId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona un Armado</option>
+                            @for (joinery of joinery; track $index) {
+                            <option value="{{joinery.id}}">{{joinery.name}}</option>
+                            }
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Subtipo de Armado</span>
+                        <select formControlName="joineryTypeId" class="form-select form-select-sm rounded-0" name=""
+                            id="">
+                            <option selected disabled value="">Selecciona un Subtipo de Armado</option>
+                            @for (joinerytype of joineryTypes; track $index) {
+                            <option value="{{joinerytype.id}}">{{joinerytype.name}}</option>
+                            }
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Linea</span>
+                        <select formControlName="lineId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona una Linea</option>
+                            @for (line of lines; track $index) {
+                            <option value="{{line.id}}">{{line.name}}</option>
+                            }
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Ruta</span>
+                        <select formControlName="routeId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona una Ruta</option>
+                            @for (route of routes; track $index) {
+                            <option value="{{route.id}}">{{route.code}}</option>
+                            }
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Catalogo de Produccion</span>
+                        <input formControlName="privateCatalog" class="form-control form-control-sm rounded-0">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Catalogo Publico</span>
+                        <input formControlName="publicCatalog" class="form-control form-control-sm rounded-0">
+                        </div>
+                    </div>
+                </div>   
+              </div>
+              <div class="row align-items-center">
+                <h5>Frentes de Cajon</h5>
+                <div class="col-md-5">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Frente de Cajon</span>
+                        <input 
+                            (input)="searchText($event)" class="form-control form-control-sm rounded-0"
+                            placeholder="Buscar" aria-describedby="inputGroup-sizing-sm"
+                            [ngClass]="{'rounded-0 ': typesBoxJournies.length != 0}"
+                            (keydown.arrowup)="navigateUp()" (keydown.arrowdown)="navigateDown()"
+                            (keydown.enter)="selectHingeComponentFromKeyboard()" />
+
+                        <ul class="list-group position-absolute rounded-0 animate__animated animate__fadeIn"
+                            style="width: 16rem; z-index: 999;  margin-top: 35px;" *ngIf="term && showListTypeBox">
+                            <li *ngFor="let TypesJourney of typesBoxJournies | filterTypeBoxJounery:term; let i = index"
+                                class="list-group-item list-group-item-action" style="font-size: 0.75em;"
+                                [class.active]="selectedIndex === i" (click)="selectTypeBoxJourney(TypesJourney)">
+                                {{TypesJourney.name}}
+                            </li>
+                        </ul>
+
+
+                    </div>
+                </div>
+                <table class="table table-sm" style="font-size: 0.9rem;">
+                    <thead class="table-secondary">
+                        <tr class="text-center">
+                            <th scope="col" class="border-0">Frente de Cajon</th>
+        
+                        </tr>
+                    </thead>
+                        <!-- <tbody>
+                            <tr class="text-center" *ngFor="let component of hingeHingeComponents; let i = index"
+                                (click)="selectHingeComponentTable(component)"
+                                [ngClass]="{'table-primary': selectedHingeComponent?.component?.id == component.component.id}">
+                                <th scope="row">{{component.component.code}}</th>
+                                <td>{{component.component.name}}</td>
+                                <td>{{component.quantity}}</td>
+                                <td>{{component.component.brand.name}}</td>
+            
+                            </tr>
+                        </tbody> -->
+                </table>
+                
+                
+                
+            </div>
+                
+                
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Siguiente
+            </button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditDoorModel" (ngSubmit)="update()">
+        <div class="modal-header">
+            <h5 class="modal-title">{{selectedDoorModel?.model?.name}}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Modelo</label>
+                        <input hidden type="text" formControlName="modelId">
+                        <input type="text" formControlName="modelName" (input)="searchModel($event)"
+                            class="form-control form-control-sm rounded-0" placeholder="Buscar"
+                            aria-describedby="helpId" [ngClass]="{'rounded-0': filteredModels().length != 0}"
+                            (keydown.arrowup)="navigateModelUp()" (keydown.arrowdown)="navigateModelDown()"
+                            (keydown.enter)="selectModelFromKeyboard()" />
+
+                        <ul *ngIf="Modelterm && showList"
+                            class="list-group list-group position-absolute rounded-0 animate__animated animate__fadeIn"
+                            style="width: 16rem; z-index: 999;">
+                            <li *ngFor="let model of filteredModels(); let i = index"
+                                class="list-group-item list-group-item-action" [class.active]="selectedModelIndex === i"
+                                (click)="selectModel(model)">{{model.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Linea</label>
+                        <select formControlName="lineId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona una Linea</option>
+                            @for (line of lines; track $index) {
+                            <option value="{{line.id}}">{{line.name}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Ruta</label>
+                        <select formControlName="routeId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona un Modelo</option>
+                            @for (route of routes; track $index) {
+                            <option value="{{route.id}}">{{route.code}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Subtipo de Armado</label>
+                        <select formControlName="joineryTypeId" class="form-select form-select-sm rounded-0" name=""
+                            id="">
+                            <option selected disabled value="">Selecciona un Modelo</option>
+                            @for (joinerytype of joineryTypes; track $index) {
+                            <option value="{{joinerytype.id}}">{{joinerytype.name}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Material</label>
+                        <select formControlName="materialTypeId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona un Material</option>
+                            @for (materialType of materialType; track $index) {
+                            <option value="{{materialType.id}}">{{materialType.name}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Frente de Cajon</label>
+                        <select formControlName="typesBoxJourneyId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona un Frente de Cajon</option>
+                            @for (typesBoxJourney of typesBoxJournies; track $index) {
+                            <option value="{{typesBoxJourney.id}}">{{typesBoxJourney.name}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Catalogo Produccion</label>
+                        <input formControlName="privateCatalog" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Catalogo Publico</label>
+                        <input formControlName="publicCatalog" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>

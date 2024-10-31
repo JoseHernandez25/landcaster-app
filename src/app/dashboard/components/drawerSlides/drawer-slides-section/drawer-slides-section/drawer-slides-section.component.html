@@ -1,0 +1,388 @@
+<table class="table table-sm table-striped table-hover" style="font-size: 0.9rem;">
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th>Costo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (drawerSlide of (paginationService.pagination$ | async)?.data; track $index) {
+        <tr (click)="selectDrawerSlide(drawerSlide)" (dblclick)="handleDoubleClick(drawerSlide)"
+            [ngClass]="{'table-primary': selectedDrawerSlide?.id == drawerSlide.id}">
+            <th class="border-0">{{drawerSlide.code}}</th>
+            <td class="border-0">{{drawerSlide.name}}</td>
+            <td class="border-0">{{drawerSlide.drawerSlideType.name}}</td>
+            <td class="border-0">{{drawerSlide.price}}</td>
+            <td class="border-0">{{drawerSlide.cost}}</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditDrawerSlide" (ngSubmit)="update()" class="p-3">
+        <!-- Header -->
+        <div class="modal-header">
+            <h5 class="modal-title">{{ selectedDrawerSlide?.name }}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+            <!-- First Row -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                            <input formControlName="code" class="form-control form-control-sm rounded-0" />
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'code')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                            <input formControlName="name" class="form-control form-control-sm rounded-0" />
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'name')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Precio</span>
+                            <input formControlName="price" class="form-control form-control-sm rounded-0" />
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'price')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Costo</span>
+                            <input formControlName="cost" class="form-control form-control-sm rounded-0" />
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'cost')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Marcas</span>
+                            <select class="form-select form-select-sm rounded-0" formControlName="brandId">
+                                <option selected disabled value="">
+                                    Selecciona una marca
+                                </option>
+                                <option *ngFor="let brand of brands; track by $index" [value]="brand.id">
+                                    {{ brand.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Tipo</span>
+                            <select formControlName="drawerSlideTypeId" class="form-select form-select-sm rounded-0"
+                                name="" id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (drawerSlideType of drawerSlideTypes; track $index) {
+                                <option value="{{drawerSlideType.id}}">{{drawerSlideType.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditDrawerSlide, 'drawerSlideTypeId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Descripcion</span>
+                            <input formControlName="description" class="form-control form-control-sm rounded-0" />
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'description')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">FI</span>
+                            <input formControlName="increaseFactor" class="form-control form-control-sm rounded-0" />
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditDrawerSlide, 'increaseFactor')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+
+    </form>
+</ng-template>
+
+
+<ng-template #modalStoreDrawerSlide let-close="close" class="rounded-0">
+    <!-- cambiarle nombre al modal# -->
+    <form [formGroup]="formStoreDrawerSlide" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar componente</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                            <input formControlName="code" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'code')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                            <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Precio</span>
+                            <input formControlName="price" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'price')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Costo</span>
+                            <input formControlName="cost" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'cost')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Marcas</span>
+                            <select formControlName="brandId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (brand of brands; track $index) {
+                                <option value="{{brand.id}}">{{brand.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'brandId')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Tipo</span>
+                            <select formControlName="drawerSlideTypeId" class="form-select form-select-sm rounded-0"
+                                name="" id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (drawerSlideType of drawerSlideTypes; track $index) {
+                                <option value="{{drawerSlideType.id}}">{{drawerSlideType.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'drawerSlideTypeId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Descripcion</span>
+                                <input formControlName="description" class="form-control form-control-sm rounded-0">
+                            </div>
+                            <small id="from_name_help"
+                                *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'description')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">FI</span>
+                                <input formControlName="increaseFactor" class="form-control form-control-sm rounded-0">
+                            </div>
+                            <small id="from_name_help"
+                                *ngIf="validatorService.validateInput(formStoreDrawerSlide, 'increaseFactor')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row align-items-center mb-3">
+                    <div class="col-md-3">
+                        <div class="">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                                <input type="text" formControlName="drawerSlideComponentsIds" [(ngModel)]="searchtext"
+                                    class="form-control rounded-0" placeholder="Buscar" aria-describedby="helpId"
+                                    [ngClass]="{'rounded-0 ': drawerSlideTypes.length != 0}"
+                                    (keydown.arrowup)="navigateUp()" (keydown.arrowdown)="navigateDown()"
+                                    (keydown.enter)="selectDrawerSlideComponentsFromKeyboard()" />
+                                    
+                                <ul *ngIf="searchtext && showComponentList"
+                                    class="list-group position-absolute rounded-0 animate__animated animate__fadeIn"
+                                    style="width: 16rem; z-index: 999; margin-top: 35px; max-height: 200px; overflow-y: auto;">
+
+                                    <li *ngFor="let drawerSlideComponent of drawerSlideComponents | filterDrawerSlideComponent:searchtext; let i = index"
+                                        class="list-group-item list-group-item-action" style="font-size: 0.75em;"
+                                        [class.active]="selectedIndex === i"
+                                        (click)="selectDrawerSlideComponents(drawerSlideComponent)">
+                                        {{drawerSlideComponent.supplierCode}}
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control rounded-0" id="componentName"
+                                    [value]="selectedComponent?.name" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <input class="form-control form-control-sm rounded-0" type="number" placeholder="Cantidad"
+                            formControlName="quantity">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary btn-sm  rounded-0 mx-1" (click)=" addToSelected()">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm rounded-0 mx-1"
+                            (click)=" discardSelection()">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-sm" style="font-size: 0.9rem;">
+                <thead class="table-secondary">
+                    <tr class="text-center">
+                        <th scope="col" class="border-0">Código</th>
+                        <th scope="col" class="border-0">Nombre</th>
+                        <th scope="col" class="border-0">Cantidad</th>
+                        <th scope="col" class="border-0">Marca</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center">
+                        <th scope="row">xxxx</th>
+                        <td>xxxx</td>
+                        <td>xxxx</td>
+                        <td>xxxx</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()"
+                    (click)="clear()">
+                    Cerrar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<div class="row">
+    <div class="col-8">
+        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+    </div>
+    <div class="col-4 text-end">
+        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button" (click)="openStoreModal()">
+            Agregar
+        </button>
+        <button [disabled]="!selectedDrawerSlide" class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button"
+            (click)="delete()">
+            Eliminar
+        </button>
+    </div>
+</div>

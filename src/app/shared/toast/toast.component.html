@@ -1,0 +1,29 @@
+<div class="animate__animated  toast show bg-white rounded-0 
+border-4 border  border-top-0 border-end-0 border-bottom-0  
+position-absolute end-0 m-3 w-25 py-2" [ngClass]="{
+    'border-success': (toastService.toastState$ | async) == 'success',
+    'border-warning': (toastService.toastState$ | async) == 'warning',
+    'border-danger': (toastService.toastState$ | async) == 'danger',
+    'd-none': (toastService.showsToast$ | async) == 'init',
+    'animate__fadeInRight': (toastService.showsToast$ | async) == 'show',
+    'animate__slideOutRight': (toastService.showsToast$ | async) == 'hide',
+}" ata-autohide="false" style="z-index: 1">
+
+    <div class="toast-body" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <i class=" fs-4 me-3" [ngClass]="{
+                    'bi bi-check-circle-fill text-success': (toastService.toastState$ | async) == 'success',
+                    'bi bi-exclamation-triangle-fill text-warning': (toastService.toastState$ | async) == 'warning',
+                    'bi bi-exclamation-diamond-fill text-danger': (toastService.toastState$ | async) == 'danger',
+                }"></i>
+            </div>
+            <div class="flex-grow-1 ms-3 d-flex align-items-center fw-bold">
+                {{ toastService.toastMessage$ | async }}
+            </div>
+            <div class="flex-shrink-0">
+                <button type="button" class="btn-close fs-6" (click)="dismiss()"></button>
+            </div>
+        </div>
+    </div>
+</div>

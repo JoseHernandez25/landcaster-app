@@ -1,0 +1,298 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-125">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Otros accesorios</h3>
+                    </div>
+                    <div class="input-group input-group-sm w-25 mx-2">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                          <i class="bi bi-search"></i>
+                        </span>
+                        <input #inputTerm type="text" class="form-control form-control-sm rounded-0" placeholder="Nombre" (input)="search($event)">
+                      </div>
+                      
+                      
+                </div>
+                <table class="table table-sm table-striped table-hover no-borders" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Costo</th>
+                            <th>FI</th>
+                            <th>Moneda</th>
+                            <th>Marca</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (ExternalAccesories of (paginationService.pagination$ | async)?.data; track $index) {
+                        <tr (dblclick)="handleDoubleClick(ExternalAccesories)"
+                            (click)="selectExternalAccesory(ExternalAccesories)"
+                            [ngClass]="{'table-primary': selectedExternalAccesorie?.id == ExternalAccesories.id}">
+                            <td>{{ExternalAccesories.code}}</td>
+                            <td>{{ExternalAccesories.name}}</td>
+                            <td>{{ExternalAccesories.cost}}</td>
+                            <td>{{ExternalAccesories.increaseFactor}}</td>
+                            <td>{{ExternalAccesories.currencie.name}}</td>
+                            @if (ExternalAccesories.brand) {
+                            <td>{{ExternalAccesories.brand.name}}</td>
+                            } @else {
+                            <td>Sin marca</td>
+                            }
+                            <td>{{ExternalAccesories.accesorieType.name}}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-8">
+                        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button"
+                            (click)="openStoreModal()">
+                            Agregar
+                        </button>
+                        <button [disabled]="!selectedExternalAccesorie"
+                            class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button" (click)="delete()">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <ng-template #modalStoreExternalAccesory let-close="close" class="rounded-0">
+        <form [formGroup]="formStoreExternalAccesory" (ngSubmit)="store()">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar accesorio</h5>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="close()"></button>
+            </div>
+            <div class="p-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                            <input formControlName="code" type="text" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                            <input formControlName="name" type="text" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Costo</span>
+                            <input formControlName="cost" type="text" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">FI</span>
+                            <input formControlName="increaseFactor" type="text"
+                                class="form-control form-control-sm rounded-0" aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Marca</span>
+                            <select formControlName="brandId" class="form-select form-select-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (brand of brands; track $index) {
+                                <option value="{{brand.id}}">{{brand.name}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Moneda</span>
+                            <select formControlName="currencieId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una moneda</option>
+                                @for (currency of currencies; track $index) {
+                                <option value="{{currency.id}}">{{currency.name}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Tipo</span>
+                            <select formControlName="accesorieTypeId" class="form-select form-select-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (accesorieType of accesorieType; track $index) {
+                                <option value="{{accesorieType.id}}">{{accesorieType.name}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()"
+                    (click)="clear()">
+                    Cerrar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalContent let-close="close" class="rounded-0">
+        <form [formGroup]="formEditExternalAccesories" (ngSubmit)="update()" class="p-3">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{selectedExternalAccesorie?.name}}</h5>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                                <input formControlName="code"
+                                    class="form-control form-control-sm form-control form-control-sm-sm rounded-0">
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'code')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                                <input formControlName="name"
+                                    class="form-control form-control-sm form-control form-control-sm-sm rounded-0">
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'name')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Costo</span>
+                                <input formControlName="cost"
+                                    class="form-control form-control-sm form-control form-control-sm-sm rounded-0">
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'cost')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">FI</span>
+                                <input formControlName="increaseFactor"
+                                    class="form-control form-control-sm form-control form-control-sm-sm rounded-0">
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'increaseFactor')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Marcas</span>
+                                <select class="form-select form-select-sm rounded-0" formControlName="brandId" id="">
+                                    <option selected disabled value="">Selecciona una marca</option>
+                                    @for (brand of brands; track $index) {
+                                    <option value="{{brand.id}}">{{brand.name}}</option>
+                                    }
+                                </select>
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'brandId')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Moneda</span>
+                                <select class="form-select form-select-sm rounded-0" formControlName="currencieId"
+                                    id="">
+                                    <option selected disabled value="">Selecciona un angulo</option>
+                                    @for (currency of currencies; track $index) {
+                                    <option value="{{currency.id}}">{{currency.name}}</option>
+                                    }
+                                </select>
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'currencieId')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Tipos</span>
+                                <select class="form-select form-select-sm rounded-0" formControlName="accesorieTypeId"
+                                    id="">
+                                    <option selected disabled value="">Selecciona un tipo</option>
+                                    @for (accesorieType of accesorieType; track $index) {
+                                    <option value="{{accesorieType.id}}">{{accesorieType.name}}</option>
+                                    }
+                                </select>
+                            </div>
+                            <small *ngIf="validatorService.validateInput(formEditExternalAccesories, 'accesorieTypeId')"
+                                class="text-danger">
+                                Requerido
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm rounded-0" (click)="close()">
+                    Cerrar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>

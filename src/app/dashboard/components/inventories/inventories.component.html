@@ -1,0 +1,228 @@
+<!-- <div class="row">
+    <div class="col-12">
+        <div class="container">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3"> -->
+<table class="table table-sm table-striped table-hover border-0" style="font-size: 0.9rem;">
+    <thead>
+        <tr>
+            <th scope="col" class="border-0"></th>
+            <th scope="col" class="border-0">Id</th>
+            <th scope="col" class="border-0">Stock</th>
+            <th scope="col" class="border-0">Stock maximo</th>
+            <th scope="col" class="border-0">Stock minimo</th>
+            <th scope="col" class="border-0">Producto</th>
+            <th scope="col" class="border-0">Fabrica</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (inventory of (paginationService.pagination$ | async)?.data; track $index) {
+        <tr class="border-0" (dblclick)="handleDoubleClick(inventory)" (click)="selectInventory(inventory)"
+            [ngClass]="{'table-primary': selectedInventory?.id  == inventory.id}">
+            <td class=" border-0">{{ $index + 1}}</td>
+            <td class=" border-0">{{inventory.id}}</td>
+            <td class=" border-0">{{inventory.stock}}</td>
+            <td class=" border-0">{{inventory.maximumStock}}</td>
+            <td class=" border-0">{{inventory.minimumStock}}</td>
+            <td class=" border-0">{{inventory.product.name}}</td>
+            <td class=" border-0">{{inventory.factory.name}}</td>
+            <td class=" border-0"></td>
+        </tr>
+        }
+    </tbody>
+</table>
+<!-- </div> -->
+<div class="row">
+    <div class="col-8">
+        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+    </div>
+    <div class="col-4 text-end">
+        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button" (click)="openStoreModal()">
+            Agregar
+        </button>
+        <button [disabled]="!selectedInventory" class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button"
+            (click)="delete()">
+            Eliminar
+        </button>
+    </div>
+</div>
+<!-- </div>
+        </div>
+    </div>
+</div> -->
+
+<ng-template #modalStoreInventory let-close="close" class="rounded-0">
+    <form [formGroup]="formStoreInventories" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar inventario</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Stock</label>
+                        <input formControlName="stock" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreInventories, 'stock')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Stock maximo:</label>
+                        <input formControlName="MaximumStock" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreInventories, 'MaximumStock')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Stock minimo:</label>
+                        <input formControlName="MinimumStock" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreInventories, 'MinimumStock')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Productos</label>
+                        <select formControlName="ProductId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona un producto</option>
+                            @for (product of products; track $index) {
+                            <option value="{{product.id}}">{{product.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreInventories, 'ProductId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Fabrica</label>
+                        <select formControlName="FactoryId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona una fabrica</option>
+                            @for (factory of factories; track $index) {
+                            <option value="{{factory.id}}">{{factory.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreInventories, 'FactoryId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                        Cerrar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditInventories" (ngSubmit)="update()">
+        <div class="modal-header">
+            <h5 class="modal-title">Inventario</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Stock</label>
+                        <input formControlName="stock" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditInventories, 'stock')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Stock maximo:</label>
+                        <input formControlName="MaximumStock" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditInventories, 'MaximumStock')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Stock minimo:</label>
+                        <input formControlName="MinimumStock" class="form-control form-control-sm rounded-0">
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditInventories, 'MinimumStock')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Productos</label>
+                        <select formControlName="ProductId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona un producto</option>
+                            @for (product of products; track $index) {
+                            <option value="{{product.id}}">{{product.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditInventories, 'ProductId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Fabrica</label>
+                        <select formControlName="FactoryId" class="form-select form-select-sm rounded-0" name="" id="">
+                            <option selected disabled value="">Selecciona una fabrica</option>
+                            @for (factory of factories; track $index) {
+                            <option value="{{factory.id}}">{{factory.name}}</option>
+                            }
+                        </select>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditInventories, 'FactoryId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                        Cerrar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>

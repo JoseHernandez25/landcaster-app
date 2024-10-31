@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-75">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Materiales</h3>
+                    </div>
+                    <div class="input-group w-25 mx-2">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                            <i class="bi bi-search" style="font-size: .7rem;"></i>
+                        </span>
+                        <input type="text" class="form-control form-control-sm rounded-0" placeholder="Nombre"
+                            (input)="search($event)">
+                    </div>
+                    <div id="materialtype || subtypematerial || material  " class="text-end w-100">
+                        <div id="materialtype" style="float: right;">
+                            <span class="fw-bold" *ngIf="materialTypeName">{{ materialTypeName }}</span>
+                            <span *ngIf="!materialTypeName"> </span>
+                        </div>
+                        <div id="subtypematerial" style="float: right;">
+                            <span class="fw-bold" *ngIf="subTypeMaterialName">{{ subTypeMaterialName }}</span>
+                            <span *ngIf="!subTypeMaterialName"></span>
+                        </div>
+                        <div id="material" style="float: right;">
+                            <span class="fw-bold" *ngIf="materialName">{{ materialName }}</span>
+                            <span *ngIf="!materialName"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="nav nav-tabs rounded-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getTypeMaterials()" class="nav-link active" id="MaterialsTab"
+                            data-bs-toggle="tab" data-bs-target="#Materials" type="button" role="tab"
+                            aria-controls="Materials" aria-selected="true">
+                            Clases de Materiales
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getSubTypeMaterials()" class="nav-link" id="subTypeMaterialsTab"
+                            data-bs-toggle="tab" data-bs-target="#subTypeMaterials" type="button" role="tab"
+                            aria-controls="subTypeMaterials" aria-selected="false">
+                            SubClases de materiales
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getMaterial()" class="nav-link" id="MaterialsSectionTab" data-bs-toggle="tab"
+                            data-bs-target="#MaterialsSection" type="button" role="tab" aria-controls="MaterialsSection"
+                            aria-selected="true">
+
+
+                            Materiales
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="Materials" role="tabpanel"
+                        aria-labelledby="MaterialsTab">
+
+                        @if (booltypematerial) {
+                        <app-materials-types #materialsTypes
+                            (materialTypeName)="selectMaterialType($event)"></app-materials-types>
+                        }
+
+                    </div>
+
+                    <div class="tab-pane fade" id="subTypeMaterials" role="tabpanel"
+                        aria-labelledby="subTypeMaterialsTab">
+
+                        @if (boolsubtypematerial) {
+                        <app-subtypematerials #subtypematerials
+                            (subTypeMaterialName)="selectSubTypeMaterial($event)"></app-subtypematerials>
+                        }
+
+
+                    </div>
+
+                    <div class="tab-pane fade" id="MaterialsSection" role="tabpanel"
+                        aria-labelledby="MaterialsSectionTab">
+                        @if (boolmaterial) {
+                        <app-material-section #materials (materialName)="selectMaterial($event)"></app-material-section>
+                        }
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>

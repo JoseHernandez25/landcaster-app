@@ -1,0 +1,28 @@
+    #ver {
+        margin-left: 90%;
+    }
+
+    .tablas {
+        display: flex;
+        justify-content: space-between; // Para que las secciones se distribuyan uniformemente en el espacio disponible
+
+        .Correderas,
+        .Components {
+            flex: 1; // Para que ocupen todo el espacio disponible dentro del contenedor flex
+            margin-left: 1.5%;
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px; // Añade margen en la parte inferior de la tabla
+            }
+
+            .btn {
+                margin-top: 10px; // Añadir espacio entre la tabla y el botón
+            }
+        }
+    }
+
+    .btn {
+        margin-right: 10px; // Añadir espacio entre la tabla y el botón
+    }

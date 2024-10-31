@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-75">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Armados</h3>
+                    </div>
+                     <div class="input-group w-25 mx-2">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                            <i class="bi bi-search" style="font-size: .7rem;"></i>
+                        </span>
+                        <input type="text" class="form-control form-control-sm rounded-0" placeholder="Nombre"
+                        (input)="search($event)"  >
+                    </div> 
+                    
+                    <div id="joinery || joineryeType " class="text-end w-100">
+                        <div id="joinery" style="float: right;">
+                            <span class="fw-bold" *ngIf="joineryeName">{{ joineryeName }}</span>
+                            <span *ngIf="!joineryeName"> </span>
+                        </div>
+                        <div id="joineryeType" style="float: right;">
+                            <span class="fw-bold" *ngIf="joineryeTypeName">{{ joineryeTypeName }}</span>
+                            <span *ngIf="!joineryeTypeName"></span>
+                        </div>
+                    </div> 
+
+                </div>
+                <ul class="nav nav-tabs rounded-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getJoinery()" class="nav-link active" id="JoineryTab"
+                            data-bs-toggle="tab" data-bs-target="#joinerySection" type="button" role="tab"
+                            aria-controls="Joinery" aria-selected="true">
+                            Armados
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getJoineryType()" class="nav-link" id="JoineryTypeTab"
+                            data-bs-toggle="tab" data-bs-target="#joineryType" type="button" role="tab"
+                            aria-controls="JoineryType" aria-selected="false">
+                            Subtipos de Armados
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="JoineryTab" role="tabpanel"
+                        aria-labelledby="joinery-tab">
+
+                        @if (!booljoinery) {
+                            <app-joinery-section #joinerySection 
+                            (joineryeName)="selectJoinery($event)"></app-joinery-section>
+                            }
+
+                    </div>
+                    <div class="tab-pane fade show active" id="JoineryTypeTab" role="tabpanel"
+                        aria-labelledby="joinery-tab">
+
+                        @if (booljoinery) {
+                            <app-joinery-type #joineryType
+                            (joineryeTypeName)="selectJoineryType($event)" ></app-joinery-type>
+                            
+                            }
+
+                    </div>                   
+
+                </div>
+            </div>
+        </div>
+    </div>

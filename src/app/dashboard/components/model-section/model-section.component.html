@@ -1,0 +1,106 @@
+       
+                <table class="table table-striped table-hover table-sm border-0" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th class="border-0"></th>
+                            <th class="border-0">Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (model of (paginationService.pagination$ | async)?.data; track $index) {
+                        <tr class="border-0" (dblclick)="handleDoubleClick(model)"
+                         (click)="selectModel(model)" [ngClass]="{'table-primary': selectedModel?.id == model.id }">
+                            <td class=" border-0">{{$index + 1}}</td>
+                            <td class=" border-0">{{model.name}}</td>
+                        </tr>
+                        }
+                    </tbody>
+                    
+                </table>
+
+                <div class="row">
+                     <div class="col-8">
+                        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+
+                    </div> 
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button"
+                        (click)="openStoreModal()">
+                            Agregar
+                        </button>
+                        <button [disabled]="!selectedModel"
+                            class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button" (click)="delete()" >
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+
+                <ng-template #modalStoreModel let-close="close" class="rounded-0">
+                    <form [formGroup]="formStoreModel" (ngSubmit)="store()">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Agregar Modelo</h5>
+                            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                                (click)="close()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <input formControlName="name" class="form-control form-control-sm rounded-0">
+                                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreModel, 'name')"
+                                            class="text-danger">
+                                            Requerido
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                                Cerrar
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+
+                <ng-template #modalContent let-close="close" class="rounded-0">
+                    <form [formGroup]="formEditModel" (ngSubmit)="update()">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{selectedModel?.name}}</h5>
+                            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                                (click)="close()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <input formControlName="name" class="form-control form-control-sm rounded-0">
+                                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditModel, 'name')"
+                                            class="text-danger">
+                                            Requerido
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                                Cerrar
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            
+        
+
+
+

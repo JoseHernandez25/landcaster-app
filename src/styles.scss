@@ -1,0 +1,16 @@
+
+$primary: #005ba6; //432874,602365
+$secondary: #94adc2; //a98eda,BFA6D0
+
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+@import "../src/assets/scss/style.scss";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&display=swap');
+body {
+    font-family: "Quicksand", sans-serif;
+}
+  
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+@import "../node_modules/animate.css/animate.min.css";
+

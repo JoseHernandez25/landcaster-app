@@ -1,0 +1,18 @@
+<div class="d-flex align-items-center justify-content-between">
+    <span class="page-counts mr-3">{{ pageNumber }} de <strong>{{ totalPages }}</strong>
+        páginas,
+        <strong> {{totalRecords }}</strong> Registros</span>
+    <nav aria-label="Page navigation example" *ngIf="pageNumber">
+        <ul class="pagination pagination-sm justify-content-end">
+            <a class="page-link btn rounded-0" [ngClass]="prev.status" (click)="prevPage()">prev</a>
+
+            @for (pageNum of pages; track $index) {
+            <li class="page-item">
+                <a class="page-link btn rounded-0" [ngClass]="{'active': pageNum === pageNumber}"
+                    (click)="onPage(pageNum)">{{pageNum}}</a>
+            </li>
+            }
+            <a class="page-link btn rounded-0" [ngClass]="next.status" (click)="nextPage()">next</a>
+        </ul>
+    </nav>
+</div>

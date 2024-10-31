@@ -1,0 +1,371 @@
+<table class="table table-sm table-striped table-hover border-0" style="font-size: 0.9rem;">
+    <thead>
+        <tr>
+            <th scope="col" class="border-0"></th>
+            <th scope="col" class="border-0">Id</th>
+            <th scope="col" class="border-0">Codigo</th>
+            <th scope="col" class="border-0">Nombre</th>
+            <th scope="col" class="border-0">Factor de incremento</th>
+            <th scope="col" class="border-0">Descripcion</th>
+            <th scope="col" class="border-0">Costo</th>
+            <th scope="col" class="border-0">Precio</th>
+            <th scope="col" class="border-0">Marca</th>
+            <th scope="col" class="border-0">Sub subcategoria</th>
+            <th scope="col" class="border-0">Unidad</th>
+            <th scope="col" class="text-end border-0">Moneda</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (product of (paginationService.pagination$ | async)?.data; track $index) {
+        <tr class="border-0" (dblclick)="handleDoubleClick(product)" (click)="selectProduct(product)"
+            [ngClass]="{'table-primary': selectedProduct?.id  == product.id}">
+            <td class=" border-0">{{ $index + 1}}</td>
+            <td class=" border-0">{{product.id}}</td>
+            <td class=" border-0">{{product.code}}</td>
+            <td class=" border-0">{{product.name}}</td>
+            <td class=" border-0 text-center">{{product.increaseFactor}}</td>
+            <td class=" border-0">{{product.description}}</td>
+            <td class=" border-0">{{product.cost}}</td>
+            <td class=" border-0">{{product.price}}</td>
+            <td class=" border-0">{{product.brand.name}}</td>
+            <td class=" border-0">{{product.subSubCategory.name}}</td>
+            <td class=" border-0">{{product.unit.name}}</td>
+            <td class=" border-0">{{product.currencie.name}}</td>
+            <td class=" border-0"></td>
+        </tr>
+        }
+    </tbody>
+</table>
+<table class="row">
+    <div class="col-8">
+        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+    </div>
+    <div class="col-4 text-end">
+        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button" (click)="openStoreModal()">
+            Agregar
+        </button>
+        <button [disabled]="!selectedProduct" class="btn btn-danger text-light rounded-0 btn-sm mx-1" type="button"
+            (click)="delete()">
+            Eliminar
+        </button>
+    </div>
+</table>
+
+<ng-template #modalStoreProduct let-close="close" class="rounded-0">
+    <form [formGroup]="formStoreProducts" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar producto</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                        <input (window:keypress)="onKey($event)" formControlName="code"
+                            class="form-control form-control-sm rounded-0">
+                    </div>
+                    <small id="from_name_help" [ngClass]="{'text-success':!existProduct,'text-danger':existProduct}">
+                        {{existProductMessage}}
+                    </small>
+                </div>
+                <div class="col-md-8">
+                    <div class="mb-0">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Nombre</label>
+                            <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreProducts, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Descripcion</label>
+                            <input formControlName="description" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help inputGroup-sizing-sm"
+                            *ngIf="validatorService.validateInput(formStoreProducts, 'description')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">F.I.</label>
+                            <input formControlName="increasefactor" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreProducts, 'increasefactor')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Costo</label>
+                            <input formControlName="cost" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreProducts, 'cost')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4" style="width: 37.4985%">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Marca</label>
+                            <select formControlName="brandId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (brand of brands; track $index) {
+                                <option value="{{brand.id}}">{{brand.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreProducts, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4" style="width: 37.4985%">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Moneda</label>
+                            <select formControlName="currencieId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una Moneda</option>
+                                @for (currencie of currencies; track $index) {
+                                <option value="{{currencie.id}}">{{currencie.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreProducts, 'subsubcategoryId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Sub Subcategoria</label>
+                            <select formControlName="subsubcategoryId" class="form-select form-select-sm rounded-0"
+                                name="" id="">
+                                <option selected disabled value="">Selecciona una sub subcategoria</option>
+                                @for (subsubcategory of subsubcategories; track $index) {
+                                <option value="{{subsubcategory.id}}">{{subsubcategory.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreProducts, 'subsubcategoryId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Unidad</label>
+                            <select formControlName="unitId" class="form-select form-select-sm rounded-0" name="" id="">
+                                <option selected disabled value="">Selecciona una unidad</option>
+                                @for (unit of units; track $index) {
+                                <option value="{{unit.id}}">{{unit.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formStoreProducts, 'unitId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                            Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</ng-template>
+
+
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditProducts" (ngSubmit)="update()">
+        <div class="modal-header">
+            <h5 class="modal-title">{{selectedProduct?.name}}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                        <input formControlName="code" class="form-control form-control-sm rounded-0">
+                    </div>
+                </div>
+                <small id="from_name_help inputGroup-sizing-sm"
+                    *ngIf="validatorService.validateInput(formEditProducts, 'code')" class="text-danger">
+                    Requerido
+                </small>
+                <div class="col-md-8">
+                    <div class="mb-0">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Nombre</label>
+                            <input formControlName="name" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditProducts, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Descripcion</label>
+                            <input formControlName="description" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help inputGroup-sizing-sm"
+                            *ngIf="validatorService.validateInput(formEditProducts, 'description')" class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">F.I.</label>
+                            <input formControlName="increasefactor" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditProducts, 'increasefactor')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Costo</label>
+                            <input formControlName="cost" class="form-control form-control-sm rounded-0">
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditProducts, 'cost')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4" style="width: 37.4985%">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Marca</label>
+                            <select formControlName="brandId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (brand of brands; track $index) {
+                                <option value="{{brand.id}}">{{brand.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditProducts, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4" style="width: 37.4985%">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm mb">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Moneda</span>
+                            <select formControlName="currencieId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una moneda</option>
+                                @for (currency of currencies; track $index) {
+                                <option value="{{currency.id}}">{{currency.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreProducts, 'currencieId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Sub Subcategoria</label>
+                            <select formControlName="subsubcategoryId" class="form-select form-select-sm rounded-0"
+                                name="" id="">
+                                <option selected disabled value="">Selecciona una sub subcategoria</option>
+                                @for (subsubcategory of subsubcategories; track $index) {
+                                <option value="{{subsubcategory.id}}">{{subsubcategory.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditProducts, 'subsubcategoryId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mt-3">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text" id="inputGroup-sizing-sm">Unidad</label>
+                            <select formControlName="unitId" class="form-select form-select-sm rounded-0" name="" id="">
+                                <option selected disabled value="">Selecciona una unidad</option>
+                                @for (unit of units; track $index) {
+                                <option value="{{unit.id}}">{{unit.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help" *ngIf="validatorService.validateInput(formEditProducts, 'unitId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                            Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>

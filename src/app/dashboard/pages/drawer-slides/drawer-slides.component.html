@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-12">
+      <div class="container">
+        <div class="card rounded-0 p-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="text-start">
+              <h3 class="text-primary" style="margin-right: 10px;">Correderas</h3>
+            </div>
+            <div class="input-group w-50 mx-2">
+              <select #selectdrawerSlideType class="form-select form-select-sm rounded-0" name="" id=""*ngIf="isDrawerSlideTabSelected"
+              (change)="filterByDrawerSlideType($event)">
+                  <option selected value="">Selecciona un tipo</option>
+                  @for (drawerSlideType of drawerSlideType; track $index) {
+                  <option value="{{drawerSlideType.id}}">{{drawerSlideType.name}}</option> -->
+                   }
+              </select>
+          </div>
+          <div class="input-group w-50 mx-2">
+              <select #selectBrandId class="form-select form-select-sm rounded-0" name="" id="" *ngIf="isDrawerSlideTabSelected"
+                  (change)="filterByBrand($event)">
+                  <option selected value="">Todas las marcas</option>
+                  @for (brand of brands; track $index) {
+                  <option value="{{brand.id}}">{{brand.name}}</option>
+                  }
+              </select>
+          </div>
+          <div class="input-group input-group-sm w-75" style="margin-right: 10px;">
+            <span class="input-group-text rounded-0" id="basic-addon1">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control rounded-0" placeholder="Nombre" (input)="search($event)">
+          </div>
+          
+            <div class="text-end w-100">
+              <div *ngIf="!stm">
+                <span class="fw-bold">{{ drawerSlideName ? drawerSlideName : 'Sin seleccionar' }}</span>
+              </div>
+              <div *ngIf="stm">
+                <span class="fw-bold">{{ drawerSlideComponentName ? drawerSlideComponentName : 'Sin seleccionar' }}</span>
+              </div>
+            </div>
+          </div>
+          <ul class="nav nav-tabs rounded-0" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button  (click)="getDrawerSlide()" class="nav-link active" id="drawerSlides-tab" data-bs-toggle="tab" data-bs-target="#drawerSlides"
+                type="button" role="tab" aria-controls="drawerSlides" aria-selected="true">
+                Correderas
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button (click)="getDrawerSlideComponents()" class="nav-link" id="components-tab" data-bs-toggle="tab" data-bs-target="#components"
+                type="button" role="tab" aria-controls="components" aria-selected="false">
+                Componentes
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="drawerSlides" role="tabpanel" aria-labelledby="drawerSlides-tab">
+              @if (!stm) {
+              <app-drawer-slides-section #drawerSlidesSection (drawerSlideName)="selectDrawerSlide($event)"></app-drawer-slides-section>
+              }
+            </div>
+            <div class="tab-pane fade" id="components" role="tabpanel" aria-labelledby="components-tab">
+              @if (stm) {
+              <app-drawer-slide-components-section #drawerSlideComponentsSection (drawerSlideComponentName)="selectDrawerSlideComponents($event)"></app-drawer-slide-components-section>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

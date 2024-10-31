@@ -1,0 +1,253 @@
+<table class="table table-sm table-striped table-hover border-0" style="font-size: 0.9rem;">
+    <thead>
+        <tr>
+            <th class="border-0">Codigo</th>
+            <th class="border-0">Nombre</th>
+            <th class="border-0">Precio</th>
+            <th class="border-0">Marca</th>
+            <th class="border-0">Moneda</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @for (hingeComponent of (paginationService.pagination$ | async)?.data; track $index) {
+        <tr (click)="selectHingeComponents(hingeComponent)" (dblclick)="handleDoubleClick(hingeComponent)"
+            [ngClass]="{'table-primary': selectedHingeComponent?.id == hingeComponent.id}">
+            <th class=" border-0">{{hingeComponent.code}}</th>
+            <td class=" border-0">{{hingeComponent.name}}</td>
+            <td class=" border-0">{{hingeComponent.price | number:'1.2-2'}}</td>
+            @if (hingeComponent.brand) {
+            <td class="border-0">{{hingeComponent.brand.name}}</td>
+            } @else {
+            <td class="border-0">Sin marca</td>
+            }
+            <td class=" border-0">{{hingeComponent.currencie.name}}</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-8">
+        <app-pagination [paginateParameters]="paginateParameters"></app-pagination>
+    </div>
+    <div class="col-4 text-end">
+        <button class="btn btn-primary text-light rounded-0 btn-sm mx-1" type="button" (click)="openStoreModal()">
+            Agregar
+        </button>
+        <button [disabled]="!selectedHingeComponent" class="btn btn-danger text-light rounded-0 btn-sm mx-1"
+            type="button" (click)="delete()">
+            Eliminar
+        </button>
+    </div>
+</div>
+<!-- Modal -->
+
+
+<ng-template #modalStoreHingeComponent let-close="close" class="rounded-0">
+    <!-- cambiarle nombre al modal# -->
+    <form [formGroup]="formStoreHingeComponents" (ngSubmit)="store()">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar componente</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                            <input formControlName="code" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreHingeComponents, 'code')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                            <input formControlName="name" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreHingeComponents, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Costo</span>
+                            <input formControlName="price" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreHingeComponents, 'price')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Marcas</span>
+                            <select formControlName="brandId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (brand of brands; track $index) {
+                                <option value="{{brand.id}}">{{brand.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreHingeComponents, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Moneda</span>
+                            <select formControlName="currencieId" class="form-select form-select-sm rounded-0" name=""
+                                id="">
+                                <option selected disabled value="">Selecciona una moneda</option>
+                                @for (currency of currencies; track $index) {
+                                <option value="{{currency.id}}">{{currency.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formStoreHingeComponents, 'currencieId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text-white btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>
+
+
+<ng-template #modalContent let-close="close" class="rounded-0">
+    <form [formGroup]="formEditHingesComponents" (ngSubmit)="update()" class="p-3">
+        <div class="modal-header">
+            <h5 class="modal-title">{{selectedHingeComponent?.name}}</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"
+                (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Codigo</span>
+                            <input formControlName="code" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditHingesComponents, 'code')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                            <input formControlName="name" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditHingesComponents, 'name')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Precio</span>
+                            <input formControlName="price" class="form-control form-control-sm rounded-0"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <small *ngIf="validatorService.validateInput(formEditHingesComponents, 'price')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Marcas</span>
+                            <select class="form-select form-select-sm rounded-0" formControlName="brandId" id="">
+                                <option selected disabled value="">Selecciona una marca</option>
+                                @for (brand of brands; track $index) {
+                                <option value="{{brand.id}}">{{brand.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditHingesComponents, 'brandId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm ">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Moneda</span>
+                            <select class="form-select form-select-sm rounded-0" formControlName="currencieId" id="">
+                                <option selected disabled value="">Selecciona una modena</option>
+                                @for (currency of currencies; track $index) {
+                                <option value="{{currency.id}}">{{currency.name}}</option>
+                                }
+                            </select>
+                        </div>
+                        <small id="from_name_help"
+                            *ngIf="validatorService.validateInput(formEditHingesComponents, 'currencieId')"
+                            class="text-danger">
+                            Requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm rounded-0" (click)="close()">
+                Cerrar
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm rounded-0">
+                Guardar
+            </button>
+        </div>
+    </form>
+</ng-template>

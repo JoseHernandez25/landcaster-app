@@ -1,0 +1,117 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container w-75">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start mx-2">
+                        <h3 class="text-primary">Modelos</h3>
+                    </div>
+                    <div class="input-group w-75 ">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control rounded-0" placeholder="Nombre" (input)="search($event)">
+                    </div>
+                    
+                         <div class="input-group w-50 mx-2">
+                        <select *ngIf="!isModelTabSelected" #selectDoorModel  class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByMaterialType($event)">
+                            <option selected value="">Clase Material</option>
+                            @for (materialTypes of materialType; track $index) {
+                            <option value="{{materialTypes.id}}">{{materialTypes.name}}</option>
+                            }
+                        </select>
+                    </div>    
+                    <div class="input-group w-50 mx-2">
+                        <select *ngIf="!isModelTabSelected" #selectjoinery  class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByJoineryType($event)">
+                            <option selected value="">Todos los SubTiposArmados</option>
+                            @for (joineryType of joineryType; track $index) {
+                            <option value="{{joineryType.id}}">{{joineryType.name}}</option>
+                            }
+                        </select>
+                    </div> 
+                    <div class="input-group w-50 mx-2">
+                        <select *ngIf="!isModelTabSelected" #selectroute  class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByRoute($event)">
+                            <option selected value="">Todas las Rutas</option>
+                            @for (routes of route; track $index) {
+                            <option value="{{routes.id}}">{{routes.code}}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <select *ngIf="!isModelTabSelected" #selectline  class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByRoute($event)">
+                            <option selected value="">Todas las Lineas</option>
+                            @for (lines of line; track $index) {
+                            <option value="{{lines.id}}">{{lines.name}}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="input-group w-50 mx-2">
+                        <select *ngIf="!isModelTabSelected" #selectjoinery  class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByJoinery($event)">
+                            <option selected value="">Todos los Armados</option>
+                            @for (joinery of joinery; track $index) {
+                            <option value="{{joinery.id}}">{{joinery.name}}</option>
+                            }
+                        </select>
+                    </div> 
+                    <div class="input-group w-50 mx-2">
+                        <select *ngIf="!isModelTabSelected" #selectModel  class="form-select form-select-sm rounded-0" name="" id=""
+                            (change)="filterByModel($event)">
+                            <option selected value="">Todos los Modelos</option>
+                            @for (models of model; track $index) {
+                            <option value="{{models.id}}">{{models.name}}</option>
+                            }
+                        </select>
+                    </div>
+                     <div id="models || doorModels " class="text-end w-100">
+                        <div id="models" style="float: right;">
+                            <span class="fw-bold" *ngIf="modelName">{{ modelName }}</span>
+                            <span *ngIf="!modelName"> </span>
+                        </div>
+                         <div id="doorModels" style="float: right;">
+                            <span class="fw-bold" *ngIf="doormodelName">{{ doormodelName }}</span>
+                            <span *ngIf="!doormodelName"></span>
+                        </div> 
+                    </div> 
+
+                </div>
+                <ul class="nav nav-tabs rounded-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button (click)="showModel()" class="nav-link active" id="ModelsTab"
+                            data-bs-toggle="tab" data-bs-target="#modelSection" type="button" role="tab"
+                            aria-controls="Models" aria-selected="true">
+                            Nombres
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="showDoorModel()" class="nav-link" id="doorModelsTab"
+                            data-bs-toggle="tab" data-bs-target="#doorModel" type="button" role="tab"
+                            aria-controls="DoorModels" aria-selected="false">
+                            Modelos de Puertas
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active" id="ModelsTab" role="tabpanel" aria-labelledby="models-tab">
+                      @if (!boolmodel) {
+                      <app-model-section #modelSection
+                      (modelName)="selectModel($event)" ></app-model-section>
+                      }
+                  </div>
+
+                  <div class="tab-pane fade show active" id="doorModelsTab" role="tabpanel" aria-labelledby="doormodels-tab">
+                    @if (boolmodel) {
+                    <app-door-model #doorModel
+                    (doormodelName)="selectdoorModel($event)"
+                    ></app-door-model>
+                    }
+                </div>
+              </div>
+                
+            </div>
+        </div>
+    </div>

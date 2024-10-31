@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col-12">
+        <div class="container">
+            <div class="card rounded-0 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start">
+                        <h3 class="text-primary">Categorias</h3>
+                    </div>
+                    <div class="input-group w-25">
+                        <span class="input-group-text rounded-0" id="basic-addon1">
+                            <i class="bi bi-search" style="font-size: .7rem;"></i>
+                        </span>
+                        <input #inputTerm type="text" class="form-control form-control-sm rounded-0"
+                            placeholder="Buscar" (input)="search($event)">
+                    </div>
+                    <div class="text-end w-50">
+                        <div id="category || components" class="text-end w-100">
+                            <div id="category" style="float: right;">
+                                <span class="fw-bold">{{ categoryName }}</span>
+                                <span class="fw-bold">{{ subCategoryName }}</span>
+                                <span class="fw-bold">{{ subSubCategoryName }}</span>
+                                <span *ngIf="!categoryName && !subCategoryName && !subSubCategoryName">Sin seleccionar
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs rounded-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getCategories()" class="nav-link active" id="categories-tab"
+                            data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab"
+                            aria-controls="categories" aria-selected="true">
+                            Categorias
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getSubCategories()" class="nav-link" id="sub-categories-tab"
+                            data-bs-toggle="tab" data-bs-target="#subcategories" type="button" role="tab"
+                            aria-controls="subcategories" aria-selected="false">
+                            Sub Categorias
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="getSubSubCategories()" class="nav-link" id="sub-sub-categories-tab"
+                            data-bs-toggle="tab" data-bs-target="#sub-sub-categories" type="button" role="tab"
+                            aria-controls="sub-sub-categories" aria-selected="false">
+                            Sub Sub Categorias
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button (click)="showProducts()" class="nav-link" id="products-tab"
+                            data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab"
+                            aria-controls="products" aria-selected="false">
+                            Productos
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="categories" role="tabpanel"
+                        aria-labelledby="categories-tab">
+                        @if(catv) {
+                        <app-categories-tab #categories (categoryName)="selectCategories($event)"></app-categories-tab>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="subcategories" role="tabpanel" aria-labelledby="sub-categories-tab">
+                        @if(subcatv) {
+                        <app-sub-categories #subcategories
+                            (subCategoryName)="selectSubCategories($event)"></app-sub-categories>
+                        }
+
+                    </div>
+                    <div class="tab-pane fade" id="sub-sub-categories" role="tabpanel"
+                        aria-labelledby="sub-sub-categories">
+                        @if (subsubcatv) {
+                        <app-sub-sub-categories #subsubcategories
+                            (subSubCategoryName)="selectSubSubCategories($event)"></app-sub-sub-categories>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">
+                        @if(showpro) {
+                        <app-products #product (productName)="selectProducts($event)"></app-products>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
